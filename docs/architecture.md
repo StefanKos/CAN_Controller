@@ -28,7 +28,7 @@ The architecture is designed with the following goals:
 
 A CAN node does not rely on a global shared clock on the bus.
 Instead, each node uses its own local clock and synchronizes itself to bus edges by using time quanta, sampling points, and resynchronization rules.
-Therefore, timing logic must be treated as a first-class architectural block and not as a hidden implementation detail. [web:95][web:111]
+Therefore, timing logic must be treated as a first-class architectural block and not as a hidden implementation detail.
 
 At a high level, the controller consists of:
 - A Bit Timing Logic block
@@ -108,7 +108,7 @@ Typical outputs:
 - `sync_event`
 - `resync_event`
 
-This module is one of the most important architectural blocks because CAN communication depends on distributed local timing rather than on a shared network clock. [web:95][web:111]
+This module is one of the most important architectural blocks because CAN communication depends on distributed local timing rather than on a shared network clock.
 
 ### 5.3 `can_bsp` – Bit Stream Processor / Protocol Engine
 
@@ -143,7 +143,7 @@ This block should act as the protocol orchestrator, not as a monolithic implemen
 ### 5.4 `can_arbitration`
 
 This unit handles bit-wise arbitration.
-CAN arbitration is non-destructive and based on the fact that a dominant bit (`0`) overwrites a recessive bit (`1`) on the bus. [web:103][web:110][web:114]
+CAN arbitration is non-destructive and based on the fact that a dominant bit (`0`) overwrites a recessive bit (`1`) on the bus
 
 Responsibilities:
 - Compare transmitted bit with observed bus bit
@@ -170,7 +170,7 @@ Classical CAN uses a 15-bit CRC polynomial:
 \[
 G(x) = x^{15} + x^{14} + x^{10} + x^8 + x^7 + x^4 + x^3 + 1
 \]
-The CRC field is derived from the relevant destuffed frame content before transmission and is checked again during reception. [web:48][web:108][web:113]
+The CRC field is derived from the relevant destuffed frame content before transmission and is checked again during reception. 
 
 Responsibilities:
 - Serial CRC accumulation over the relevant frame bits
@@ -216,7 +216,7 @@ For v1, this module may initially expose simple status signals even if full ISO-
 ## 6. Timing and Synchronization Concept
 
 The CAN bus is asynchronous at the system level in the sense that nodes do not share a global communication clock.
-Each node generates its own internal timing from a local oscillator and aligns itself to the observed bus edges. [web:95][web:111]
+Each node generates its own internal timing from a local oscillator and aligns itself to the observed bus edges. 
 
 The architecture models this using:
 - Time quanta as the smallest timing unit
@@ -234,7 +234,7 @@ For v1, timing should be configurable but kept simple enough to remain simulatio
 ## 7. Arbitration Concept
 
 The controller shall implement non-destructive bit-wise arbitration.
-While transmitting the arbitration field, the node continuously compares the bit it intends to send with the actual bus level. [web:103][web:110]
+While transmitting the arbitration field, the node continuously compares the bit it intends to send with the actual bus level. 
 
 Arbitration rule:
 - If the node transmits dominant and sees dominant, it remains active
@@ -242,7 +242,7 @@ Arbitration rule:
 - If the node transmits recessive and sees dominant, it loses arbitration immediately
 - After arbitration loss, the node stops transmitting and continues as a receiver
 
-This mechanism ensures that the frame with the numerically lowest identifier wins access to the bus without destroying the winning transmission. [web:103][web:106]
+This mechanism ensures that the frame with the numerically lowest identifier wins access to the bus without destroying the winning transmission. 
 
 Architectural consequence:
 - Arbitration must be implemented as a dedicated check path
@@ -252,7 +252,7 @@ Architectural consequence:
 ## 8. CRC Concept
 
 CRC provides frame-level error detection.
-In Classical CAN, CRC-15 is used for payload lengths up to 8 bytes. [web:48]
+In Classical CAN, CRC-15 is used for payload lengths up to 8 bytes.
 
 The architecture uses a dedicated CRC block rather than embedding CRC logic directly into the transmitter or receiver FSM.
 This separation improves:
