@@ -50,11 +50,8 @@ architecture rtl of can_crc_core is
 
 begin
 
-    ----------------------------------------------------------------
-    -- CRC register process
-    -- Updates the internal CRC register when crc_enable is asserted.
-    -- The actual CAN CRC-15 feedback logic is to be inserted here.
-    ----------------------------------------------------------------
+	-- CRC register process
+	-- Updates the internal CRC register when crc_enable is asserted.
 	p_crc_reg : process(clk)
 		variable crc_next : t_can_crc15;
 		variable feedback : std_logic;
@@ -70,16 +67,11 @@ begin
 				crc_next := crc_reg;
 				feedback := data_bit xor crc_reg(C_CAN_CRC15_WIDTH-1);
 
-                -- Shift register update placeholder
+				-- Shift register update placeholder
 				crc_next(C_CAN_CRC15_WIDTH-1 downto 1) := crc_reg(C_CAN_CRC15_WIDTH-2 downto 0);
 				crc_next(0) := '0';
 
-                -- Polynomial tap logic to be completed
-                -- Example structure:
-                -- if feedback = '1' then
-                --     crc_next(bit_index) := crc_next(bit_index) xor '1';
-                -- end if;
-
+				-- CRC Test Polynomial will be placed here
 				crc_reg <= crc_next;
 			end if;
 		end if;

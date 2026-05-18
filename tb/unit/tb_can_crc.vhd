@@ -54,9 +54,7 @@ architecture sim of tb_can_crc is
 
 begin
 
-	----------------------------------------------------------------
 	-- DUT instantiation
-	----------------------------------------------------------------
 	uut : entity work.can_crc_core
 		port map (
 			clk         => clk,
@@ -66,10 +64,8 @@ begin
 			data_bit    => data_bit,
 			crc_reg_out => crc_reg_out
 		);
-
-	----------------------------------------------------------------
+		
 	-- Clock generation
-	----------------------------------------------------------------
 	p_clk : process
 	begin
 		while true loop
@@ -79,16 +75,13 @@ begin
 			wait for C_CLK_PERIOD / 2;
 		end loop;
 	end process p_clk;
-
-	----------------------------------------------------------------
+	
 	-- Stimulus process
-	----------------------------------------------------------------
 	p_stim : process
 		variable crc_before : t_can_crc15;
 	begin
-		------------------------------------------------------------
+	
 		-- Global reset
-		------------------------------------------------------------
 		rst <= '1';
 		crc_reset <= '0';
 		crc_enable <= '0';
@@ -101,10 +94,8 @@ begin
 		assert crc_reg_out = (others => '0')
 			report "ERROR: CRC register not cleared after global reset."
 			severity error;
-
-		------------------------------------------------------------
+			
 		-- Check crc_reset
-		------------------------------------------------------------
 		crc_enable <= '1';
 		data_bit <= '1';
 		wait until rising_edge(clk);
@@ -120,10 +111,8 @@ begin
 		assert crc_reg_out = (others => '0')
 			report "ERROR: CRC register not cleared by crc_reset."
 			severity error;
-
-		------------------------------------------------------------
+			
 		-- Check hold behavior when crc_enable = '0'
-		------------------------------------------------------------
 		crc_before := crc_reg_out;
 		crc_enable <= '0';
 		data_bit <= '1';
@@ -133,10 +122,8 @@ begin
 		assert crc_reg_out = crc_before
 			report "ERROR: CRC register changed although crc_enable = '0'."
 			severity error;
-
-		------------------------------------------------------------
+			
 		-- Apply simple serial stimulus with crc_enable = '1'
-		------------------------------------------------------------
 		crc_enable <= '1';
 
 		data_bit <= '1';
@@ -153,14 +140,12 @@ begin
 
 		data_bit <= '1';
 		wait until rising_edge(clk);
-		wait for 1 ns;
-
-		------------------------------------------------------------
+			wait for 1 ns;
+			
 		-- Informational check:
 		-- with the current placeholder implementation, the register
 		-- should not remain all-zero forever once enabled stimulus
 		-- has been applied.
-		------------------------------------------------------------
 		assert crc_reg_out /= (others => '0')
 			report "ERROR: CRC register did not change during enabled stimulus."
 			severity error;
